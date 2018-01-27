@@ -1,0 +1,48 @@
+package rabinkarp;
+
+import timing.Ticker;
+
+public class RK {
+	
+	//
+	// Be sure to look at the write up for this assignment
+	//  so that you get full credit by satisfying all
+	//  of its requirements
+	//
+	private final int m;
+	private final char[] win;
+	private int i = 0;
+	private int Hash;
+
+	/**
+	 * Rabin-Karp string matching for a win of the specified size
+	 * @param m size of the win
+	 */
+	public RK(int m) {
+		this.m = m;
+		this.win = new char[m];
+		this.Hash = 0;
+	}
+	
+
+	/**
+	 * compute the rolling hash for the previous m-1 characters with d appended.
+	 * @param d the next character in the target string
+	 * @return
+	 */
+	public int nextCh(char d) {
+		int tmp = win[i];
+		win[i] = d;
+		Hash = Math.floorMod((((Hash * 31) % 511) - ((pow(31, m, 511)) * (tmp % 511)) + d % 511), 511);
+		i = (i + 1)%m;
+		return this.Hash;
+	}
+
+	private static int pow(int a, int n, int p) {
+		if (n == 1) {
+			return a;
+		} else {
+			return (pow(a, n - 1, p) * a) % p;
+		}
+	}
+}
